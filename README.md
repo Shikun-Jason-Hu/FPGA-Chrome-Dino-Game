@@ -28,6 +28,15 @@ sprite rendering, collision detection, and real-time game logic.
 -   Simulation testbenches for major modules
 
 ------------------------------------------------------------------------
+## Project Statistics
+
+- **Language:** SystemVerilog
+- **Supporting Tools:** Python
+- **Target Board:** Intel DE1-SoC
+- **Graphics:** VGA (640×480)
+- **Development Environment:** Intel Quartus Prime Lite
+
+------------------------------------------------------------------------
 
 ## Hardware
 
@@ -91,8 +100,11 @@ FPGA-Chrome-Dino/
 ├── quartus/                 # Quartus project & PLL IP
 ├── screenshots/             # Images used in README
 ├── docs/                    # Project report
+├── tools                    # ROM generation scripts
+├── assets                   # Original PNG sprites
 ├── README.md
 └── LICENSE
+
 ```
 
 ------------------------------------------------------------------------
@@ -184,6 +196,81 @@ All game logic, rendering, collision detection, obstacle generation, sprite rend
 3. Make sure the ROM file paths in `renderer.sv` match your local project structure.
 4. Compile the project.
 5. Program the DE1-SoC board using the generated `.sof` file.
+------------------------------------------------------------------------
+##  Asset Generation
+
+The game graphics are created from PNG images using a custom Python tool included in the repository.
+
+```
+assets/
+    PNG Images
+        │
+        ▼
+tools/fpga_rom_tool.py
+        │
+        ▼
+ROM (.hex)
+        │
+        ▼
+$readmemh()
+        │
+        ▼
+FPGA Sprite Memory
+        │
+        ▼
+VGA Renderer
+```
+
+The tool automatically:
+
+- Detects sprite boundaries
+- Crops transparent space
+- Resizes sprites
+- Centers sprites inside ROM slots
+- Generates preview images
+- Exports Quartus-compatible `.mem` and `.hex` files
+
+This allows new sprites to be added without manually editing ROM contents.
+
+------------------------------------------------------------------------
+
+## Development Tools
+
+The `tools/` directory contains reusable Python utilities for generating FPGA ROM initialization files.
+
+Main utility:
+
+```text
+tools/
+└── fpga_rom_tool.py
+```
+
+Example:
+
+```bash
+python fpga_rom_tool.py single assets/game_over.png \
+    -o rom/game_over.hex \
+    --w 100 \
+    --h 50
+```
+
+------------------------------------------------------------------------
+## Customization
+
+Many gameplay parameters are configurable through constants defined in the SystemVerilog modules.
+
+Examples include:
+
+- Jump height and gravity
+- Obstacle speed and spawn timing
+- Sprite and hitbox dimensions
+- Score update rate
+
+A detailed list of configurable parameters can be found in:
+```
+docs/PARAMETERS.md
+```
+
 ------------------------------------------------------------------------
 ## License
 
