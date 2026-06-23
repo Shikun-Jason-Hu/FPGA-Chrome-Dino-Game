@@ -4,8 +4,8 @@
 // every game tick.
 module dino_controller (
 	// inputs
-	input logic clk,
-	input logic reset,
+	input logic clk,			// 50 MHz clock
+	input logic reset,			// resets the dino's motion, position, animation, and states
 	input logic game_tick,		// one clk cycle per frame of the game
 	input logic jump,				// when up-button is pressed on N8 controller
 	input logic duck,				// when down-button is pressed on N8 controller
